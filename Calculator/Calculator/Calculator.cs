@@ -4,13 +4,23 @@ namespace Calculator
 {
     public class Calculator
     {
+        public static int GetValidatedInteger(string prompt)
+        {
+            int result;
+            Console.Write(prompt);
+            while (!int.TryParse(Console.ReadLine(), out result))
+            {
+                Console.Write("Invalid input! Please enter a valid integer: ");
+            }
+            return result;
+        }
         public void Run()
         {
             Calculation calculate = new Calculation();
 
             while (true)
             {
-                Console.WriteLine("Choose operation: 1.+  2.-  3.*  4./ 5.%  or type 'exit' to quit:");
+                Console.WriteLine("Choose operation: 1.+  2.-  3.*  4./  5.%  or type 'exit' to quit:");
                 string operators = Console.ReadLine();
 
                 if (operators.ToLower() == "exit")
@@ -19,31 +29,8 @@ namespace Calculator
                     break;
                 }
 
-                int num1 = 0, num2 = 0;
-                bool num1Valid = false, num2Valid = false;
-
-                while (!num1Valid || !num2Valid)
-                {
-                    try
-                    {
-                        if (!num1Valid)
-                        {
-                            Console.Write("Enter first number: ");
-                            num1 = int.Parse(Console.ReadLine());
-                            num1Valid = true;
-                        }
-                        if (!num2Valid)
-                        {
-                            Console.Write("Enter second number: ");
-                            num2 = int.Parse(Console.ReadLine());
-                            num2Valid = true;
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Invalid input! Please enter a valid integer.\n");
-                    }
-                }
+                int num1 = GetValidatedInteger("Enter first number: ");
+                int num2 = GetValidatedInteger("Enter second number: ");
 
                 switch (operators)
                 {
@@ -80,30 +67,22 @@ namespace Calculator
 
         public void Dividing(int a, int b)
         {
-            try
+            if (b == 0)
             {
-                if (b == 0)
-                    throw new DivideByZeroException("Cannot divide by zero.");
-                Console.WriteLine("Quotient: " + (a / b));
+                Console.WriteLine("Error during division: Cannot divide by zero.");
+                return;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error during division: " + e.Message);
-            }
+            Console.WriteLine("Quotient: " + (a / b));
         }
 
         public void RemainderOf(int a, int b)
         {
-            try
+            if (b == 0)
             {
-                if (b == 0)
-                    throw new DivideByZeroException("Cannot mod by zero.");
-                Console.WriteLine("Remainder: " + (a % b));
+                Console.WriteLine("Error during modulo: Cannot mod by zero.");
+                return;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error during modulo: " + e.Message);
-            }
+            Console.WriteLine("Remainder: " + (a % b));
         }
     }
 }
